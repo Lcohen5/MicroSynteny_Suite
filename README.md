@@ -4,7 +4,9 @@ Tools for recording the genes around a target gene in several *Drosophila*
 species and drawing the result as a comparative synteny figure.
 
 Created by Logan Cohen for the Genomics Education Partnership.
+
 Contact: logancohen@thegep.org
+
 Repository: https://github.com/Lcohen5/MicroSynteny_Suite
 
 ## Getting it
