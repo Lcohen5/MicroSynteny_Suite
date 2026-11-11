@@ -1,0 +1,28 @@
+# R session files
+.RData
+.Rhistory
+.Rproj.user/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# macOS / Windows
+.DS_Store
+Thumbs.db
+
+# Everyone's tables and figures land in output/.
+# Only the sample table is part of the repository.
+output/*
+!output/ImpL2_Sample.tsv
+
+# Generated output, wherever it ends up
+*_synteny.pdf
+*_synteny.png
+*_synteny.svg
+*_merged.tsv
+*_merge_report.txt
+*.tmp
+*.pre_v7_backup
+*.pre_locid_fix
