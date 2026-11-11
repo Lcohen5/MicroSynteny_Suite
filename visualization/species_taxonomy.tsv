@@ -1,0 +1,37 @@
+species	abbrev	subgenus	group	subgroup	order	notes
+D. melanogaster	Dmel	Sophophora	melanogaster	melanogaster	1	reference species
+D. mauritiana	Dmau	Sophophora	melanogaster	melanogaster	2	
+D. sechellia	Dsec	Sophophora	melanogaster	melanogaster	3	
+D. simulans	Dsim	Sophophora	melanogaster	melanogaster	4	
+D. yakuba	Dyak	Sophophora	melanogaster	melanogaster	5	
+D. santomea	Dsan	Sophophora	melanogaster	melanogaster	6	
+D. teissieri	Dtei	Sophophora	melanogaster	melanogaster	7	
+D. erecta	Dere	Sophophora	melanogaster	melanogaster	8	
+D. ficusphila	Dfic	Sophophora	melanogaster	ficusphila	9	Oriental lineage
+D. suzukii	Dsuz	Sophophora	melanogaster	suzukii	10	Oriental lineage
+D. subpulchrella	Dspu	Sophophora	melanogaster	suzukii	11	abbrev avoids clash with D. subobscura (Dsub)
+D. biarmipes	Dbia	Sophophora	melanogaster	suzukii	12	Oriental lineage
+D. takahashii	Dtak	Sophophora	melanogaster	takahashii	13	Oriental lineage
+D. eugracilis	Deug	Sophophora	melanogaster	eugracilis	14	Oriental lineage
+D. rhopaloa	Drho	Sophophora	melanogaster	rhopaloa	15	Oriental lineage
+D. elegans	Dele	Sophophora	melanogaster	elegans	16	Oriental lineage
+D. kikkawai	Dkik	Sophophora	montium	kikkawai	17	group rank per Da Lage 2007 / Yassin 2018
+D. serrata	Dser	Sophophora	montium	serrata	18	group rank per Da Lage 2007 / Yassin 2018
+D. bipectinata	Dbip	Sophophora	ananassae	ananassae	19	group rank per Da Lage 2007; internal divisions are complexes not subgroups
+D. ananassae	Dana	Sophophora	ananassae	ananassae	20	group rank per Da Lage 2007; internal divisions are complexes not subgroups
+D. pseudoobscura	Dpse	Sophophora	obscura	pseudoobscura	21	
+D. persimilis	Dper	Sophophora	obscura	pseudoobscura	22	
+D. miranda	Dmir	Sophophora	obscura	pseudoobscura	23	
+D. guanche	Dgua	Sophophora	obscura	subobscura	24	subobscura subgroup, not obscura subgroup
+D. subobscura	Dsub	Sophophora	obscura	subobscura	25	
+D. obscura	Dobs	Sophophora	obscura	obscura	26	
+D. willistoni	Dwil	Sophophora	willistoni	willistoni	27	no finer division applied
+D. arizonae	Dari	Drosophila	repleta	mulleri	28	
+D. mojavensis	Dmoj	Drosophila	repleta	mulleri	29	
+D. navojoa	Dnav	Drosophila	repleta	mulleri	30	
+D. hydei	Dhyd	Drosophila	repleta	hydei	31	
+D. virilis	Dvir	Drosophila	virilis	virilis	32	
+D. novamexicana	Dnov	Drosophila	virilis	virilis	33	
+D. albomicans	Dalb	Drosophila	immigrans	nasuta	34	immigrans-tripunctata radiation
+D. grimshawi	Dgri	Drosophila	picture-wing	grimshawi	35	Hawaiian Drosophila; picture-wing is the more inclusive rank
+D. busckii	Dbus	Dorsilopha	busckii	busckii	36	Dorsilopha is monotypic here; group/subgroup are placeholders
