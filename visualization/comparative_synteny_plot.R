@@ -6,20 +6,26 @@
 #
 # ── HOW TO USE IT IN RSTUDIO ─────────────────────────────────────────────────
 #   1. Open visualization.Rproj (double-click it). RStudio opens in this folder.
-#   2. Open make_my_figure.R and run it one line at a time.
-#
-#   The lines in that file are all there is to it:
+#   2. Open this file, comparative_synteny_plot.R, and click Source. That
+#      loads the tool and prints the lines below. (Typing the first line in
+#      the Console does the same.)
+#   3. Run a plot_synteny() line in the Console. ImpL2_Sample.tsv ships with
+#      the suite; put your own table's name in the quotes when you are ready.
 #
 #       source("comparative_synteny_plot.R")       # load the tool (once)
-#       plot_synteny("ImpL2_merged.tsv")           # every species
-#       plot_synteny("ImpL2_merged.tsv", level = "subgenus", name = "Sophophora")
-#       plot_synteny("ImpL2_merged.tsv", level = "group",    name = "obscura")
-#       plot_synteny("ImpL2_merged.tsv", level = "subgroup", name = "melanogaster")
+#       plot_synteny("ImpL2_Sample.tsv")           # every species
+#       plot_synteny("ImpL2_Sample.tsv", level = "subgenus", name = "Sophophora")
+#       plot_synteny("ImpL2_Sample.tsv", level = "group",    name = "obscura")
+#       plot_synteny("ImpL2_Sample.tsv", level = "subgroup", name = "melanogaster")
 #
 # ── HOW TO USE IT FROM A TERMINAL ────────────────────────────────────────────
 #       Rscript comparative_synteny_plot.R TSV [TARGET] [LEVEL] [NAME]
-#       Rscript comparative_synteny_plot.R ImpL2_merged.tsv
-#       Rscript comparative_synteny_plot.R ImpL2_merged.tsv ImpL2 group obscura
+#       Rscript comparative_synteny_plot.R ImpL2_Sample.tsv
+#       Rscript comparative_synteny_plot.R ImpL2_Sample.tsv ImpL2 group obscura
+#       Rscript comparative_synteny_plot.R ImpL2_Sample.tsv all
+#
+#   "all" draws the full figure plus one for every subgenus and every group
+#   that has at least two species in the table. In R: plot_synteny_all().
 #
 # ── WHAT plot_synteny() TAKES ────────────────────────────────────────────────
 #   tsv            the merged table (a file name in quotes)
@@ -104,9 +110,17 @@ plot_synteny <- function(tsv, target = NULL, level = "full", name = NULL,
                          taxonomy = NULL, output_prefix = NULL) {
 
   if (missing(tsv) || length(tsv) == 0 || !is.character(tsv)) {
-    stop("Give the table to plot, in quotes: plot_synteny(\"ImpL2_merged.tsv\")",
+    stop("Give the table to plot, in quotes: plot_synteny(\"ImpL2_Sample.tsv\")",
          call. = FALSE)
   }
+  if (length(level) == 1 && identical(tolower(as.character(level)), "all")) {
+    if (!is.null(name) || !is.null(output_prefix)) {
+      stop("level = \"all\" draws every figure, so it takes no name or output_prefix.",
+           call. = FALSE)
+    }
+    return(plot_synteny_all(tsv, target = target, taxonomy = taxonomy))
+  }
+
   TSV_PATH              <- tsv
   TARGET_GENE_CANONICAL <- target
   SUBSET_LEVEL          <- level
@@ -206,7 +220,7 @@ plot_synteny <- function(tsv, target = NULL, level = "full", name = NULL,
 
   .valid_levels <- c("full", "subgenus", "group", "subgroup")
   if (!SUBSET_LEVEL %in% .valid_levels) {
-    stop(sprintf("level must be one of %s (got '%s')",
+    stop(sprintf("level must be one of %s, or 'all' (got '%s')",
                  paste(sQuote(.valid_levels), collapse = ", "), SUBSET_LEVEL),
          call. = FALSE)
   }
@@ -1202,8 +1216,88 @@ plot_synteny <- function(tsv, target = NULL, level = "full", name = NULL,
   message(sprintf("  %s   (vector, for the web and for editing)", basename(svg_path)))
   message(sprintf("  %s   (picture, for slides and posters)", basename(png_path)))
 
+  attr(p_slot, "files") <- c(pdf_path, svg_path, png_path)
   invisible(p_slot)
 }   # end of plot_synteny()
+
+# ══════════════════════════════════════════════════════════════════════════════
+# EVERY FIGURE AT ONCE
+#
+# plot_synteny_all() draws the full figure, then one figure for each subgenus
+# and each species group that has at least two species in the table. A subset
+# with fewer than two species has nothing to compare, so it is skipped and
+# listed at the end.
+#
+#   plot_synteny_all("ImpL2_Sample.tsv")
+#   plot_synteny("ImpL2_Sample.tsv", level = "all")          # the same thing
+#   plot_synteny_all("ImpL2_Sample.tsv", levels = c("subgenus", "group", "subgroup"))
+#
+# From a terminal:
+#   Rscript comparative_synteny_plot.R ImpL2_Sample.tsv all
+# ══════════════════════════════════════════════════════════════════════════════
+plot_synteny_all <- function(tsv, target = NULL,
+                             levels = c("subgenus", "group"),
+                             taxonomy = NULL) {
+  levels <- tolower(as.character(levels))
+  .bad <- setdiff(levels, c("subgenus", "group", "subgroup"))
+  if (length(.bad) > 0) {
+    stop(sprintf("levels can hold 'subgenus', 'group' and 'subgroup' (got '%s')",
+                 paste(.bad, collapse = "', '")), call. = FALSE)
+  }
+
+  # The full figure first, with its messages shown: anything wrong with the
+  # table (file not found, target missing, species not in the taxonomy) is
+  # reported here, once, and stops the run before any subset is tried.
+  message("== Full figure ==")
+  p_full <- plot_synteny(tsv, target = target, taxonomy = taxonomy)
+  made <- list(full = attr(p_full, "files"))
+
+  tax_path <- if (!is.null(taxonomy)) taxonomy else {
+    .cand <- c(file.path(.SYNTENY_SCRIPT_DIR, "species_taxonomy.tsv"),
+               file.path(getwd(), "species_taxonomy.tsv"))
+    .cand[file.exists(.cand)][1]
+  }
+  tax <- readr::read_tsv(tax_path, show_col_types = FALSE, progress = FALSE)
+
+  skipped <- character(0)
+  failed  <- character(0)
+  message("\n== Subsets ==")
+  for (lvl in levels) {
+    for (nm in unique(tax[[lvl]])) {
+      label <- sprintf("%s %s", lvl, nm)
+      result <- tryCatch(
+        suppressMessages(
+          plot_synteny(tsv, target = target, level = lvl, name = nm,
+                       taxonomy = taxonomy)),
+        error = function(e) e)
+      if (inherits(result, "error")) {
+        msg <- conditionMessage(result)
+        if (grepl("^Need at least 2 species", msg)) {
+          skipped <- c(skipped, label)
+        } else {
+          failed <- c(failed, sprintf("%s: %s", label, msg))
+          message(sprintf("  FAILED   %s", label))
+        }
+      } else {
+        made[[label]] <- attr(result, "files")
+        message(sprintf("  drawn    %-24s %s", label,
+                        sub("\\.pdf$", "", basename(attr(result, "files")[1]))))
+      }
+    }
+  }
+
+  n_fig <- length(made)
+  message(sprintf("\nDone: %d figure(s), each as PDF, SVG and PNG (%d files), in\n  %s",
+                  n_fig, 3 * n_fig, normalizePath(dirname(made$full[1]))))
+  if (length(skipped) > 0) {
+    message(sprintf("Not drawn, fewer than 2 species in this table:\n  %s",
+                    paste(skipped, collapse = "; ")))
+  }
+  if (length(failed) > 0) {
+    message(sprintf("Failed:\n  %s", paste(failed, collapse = "\n  ")))
+  }
+  invisible(made)
+}
 
 # ── Run from a terminal, or just load ────────────────────────────────────────
 # Rscript runs this file at the top level and is not interactive, so the
@@ -1219,14 +1313,34 @@ if (sys.nframe() == 0L && !interactive()) {
   }
   if (length(.args) < 1) {
     cat("Usage: Rscript comparative_synteny_plot.R TSV [TARGET] [LEVEL] [NAME]\n")
+    cat("       Rscript comparative_synteny_plot.R TSV all\n")
     quit(save = "no", status = 1)
   }
-  plot_synteny(
-    tsv    = .args[1],
-    target = if (length(.args) >= 2) .args[2] else NULL,
-    level  = if (length(.args) >= 3) .args[3] else "full",
-    name   = if (length(.args) >= 4) .args[4] else NULL
-  )
+  if (length(.args) == 2 && tolower(.args[2]) == "all") {
+    # TSV all: every figure, target read from the table
+    plot_synteny_all(.args[1])
+  } else if (length(.args) == 3 && tolower(.args[3]) == "all") {
+    # TSV TARGET all
+    plot_synteny_all(.args[1], target = .args[2])
+  } else {
+    plot_synteny(
+      tsv    = .args[1],
+      target = if (length(.args) >= 2) .args[2] else NULL,
+      level  = if (length(.args) >= 3) .args[3] else "full",
+      name   = if (length(.args) >= 4) .args[4] else NULL
+    )
+  }
 } else {
-  message("plot_synteny() is loaded. Example: plot_synteny(\"ImpL2_merged.tsv\")")
+  message(paste(
+    "plot_synteny() is loaded. Nothing is drawn yet. Try one of these:",
+    "",
+    "  plot_synteny(\"ImpL2_Sample.tsv\")",
+    "  plot_synteny(\"ImpL2_Sample.tsv\", level = \"subgenus\", name = \"Sophophora\")",
+    "  plot_synteny(\"ImpL2_Sample.tsv\", level = \"group\", name = \"obscura\")",
+    "  plot_synteny_all(\"ImpL2_Sample.tsv\")     # full, every subgenus, every group",
+    "",
+    "ImpL2_Sample.tsv ships with the suite. For your own figure, put your",
+    "merged table's file name in the quotes. Tables are read from, and",
+    "figures saved in, the suite's output folder.",
+    sep = "\n"))
 }

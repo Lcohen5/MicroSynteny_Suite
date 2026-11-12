@@ -432,18 +432,27 @@ def prompt_yesno_cancel(prompt: str) -> Optional[bool]:
         warn("Please enter y, n, or 'cancel'.")
 
 
-def prompt_choice(prompt: str, options: Dict[str, str]) -> str:
+def prompt_choice(prompt: str, options: Dict[str, str],
+                  back_as: Optional[str] = None) -> str:
     """
     Choose one of a small set of options. Accepts the number as shown, the
     full keyword, or an unambiguous prefix. Returns the chosen keyword.
+
+    Where the menu has somewhere to go back to, pass back_as: typing 'back'
+    then returns that keyword. It may be one of the options (so 'back' means
+    the same as, say, 'done') or a keyword of its own for the caller to act on.
     """
     keys = list(options.keys())
     print("\n" + prompt)
     for i, (k, desc) in enumerate(options.items(), start=1):
         print(f"   {i}) {k:<10} {desc}")
     number_hint = "/".join(str(i) for i in range(1, len(keys) + 1))
+    ask = (f"Choose [{number_hint}] (or 'back'): " if back_as
+           else f"Choose [{number_hint}]: ")
     while True:
-        s = prompt_raw(f"Choose [{number_hint}]: ").lower()
+        s = prompt_raw(ask).lower()
+        if back_as and is_back(s):
+            return back_as
         if s.isdigit():
             n = int(s)
             if 1 <= n <= len(keys):
@@ -883,12 +892,17 @@ def parse_position_label(s: str, up: int, down: int) -> int:
     raise ValueError("Expected Target, Upstream1, Downstream1 (and so on).")
 
 
-def prompt_position_label(up: int, down: int, prompt: Optional[str] = None) -> int:
+def prompt_position_label(up: int, down: int, prompt: Optional[str] = None,
+                          allow_back: bool = False):
+    """With allow_back=True, typing 'back' returns BACK instead of a slot."""
     up_range = f"Upstream1..Upstream{up}" if up > 0 else "(no upstream positions)"
     down_range = f"Downstream1..Downstream{down}" if down > 0 else "(no downstream positions)"
-    hint = prompt or f"Enter Target, {up_range}, or {down_range}: "
+    tail = " (or 'back'): " if allow_back else ": "
+    hint = prompt or f"Enter Target, {up_range}, or {down_range}{tail}"
     while True:
         s = prompt_raw(hint)
+        if allow_back and is_back(s):
+            return BACK
         try:
             return parse_position_label(s, up, down)
         except ValueError as e:
@@ -2753,6 +2767,7 @@ def correction_menu(
                 "more": "Larger changes (erase a side, mirror, wipe species)",
                 "quit": "Save and quit",
             },
+            back_as="done",
         )
 
         if pick == "done":
@@ -2763,7 +2778,9 @@ def correction_menu(
             raise QuitSignal()
 
         if pick == "add":
-            slot = prompt_position_label(up, down)
+            slot = prompt_position_label(up, down, allow_back=True)
+            if slot is BACK:
+                continue
             existing = [g for g in top_level_genes_for_species(feats, species)
                         if g.slot == slot]
             if existing:
@@ -2886,8 +2903,12 @@ def edit_species_session(
     feats: List[Feature],
     window: Dict[str, int],
     path: str,
-) -> str:
-    """Work on one species until the student is done with it. Returns the target name."""
+) -> Tuple[str, bool]:
+    """
+    Work on one species until the student is done with it. Returns
+    (target name, went_back): went_back is True when the student typed 'back'
+    at the species menu, meaning "let me pick a different species".
+    """
     for f in feats:
         if f.species == species:
             f.target_gene = target
@@ -2908,10 +2929,13 @@ def edit_species_session(
                 "done": f"Finished with {species}",
                 "quit": "Save and quit",
             },
+            back_as="back",
         )
 
+        if pick == "back":
+            return target, True
         if pick == "done":
-            return target
+            return target, False
         if pick == "quit":
             raise QuitSignal()
 
@@ -2926,7 +2950,9 @@ def edit_species_session(
             )
             continue
 
-        slot = prompt_position_label(window["up"], window["down"])
+        slot = prompt_position_label(window["up"], window["down"], allow_back=True)
+        if slot is BACK:
+            continue
         status, target = collect_position_with_checkpoint(
             target, species, slot, feats, window["up"], window["down"], path
         )
@@ -2999,8 +3025,11 @@ def main(folder: Optional[str] = None) -> int:
 
         while True:
             species = choose_species_to_work_on(feats)
-            target = edit_species_session(target, species, feats, window, path)
+            target, went_back = edit_species_session(
+                target, species, feats, window, path)
             write_tsv(path, feats)
+            if went_back:
+                continue   # straight back to the species question
             if not prompt_yesno("\nWork on another species? (y/n) "):
                 break
 

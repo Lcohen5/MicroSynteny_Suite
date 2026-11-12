@@ -5,7 +5,6 @@ Part of **MicroSynteny Suite** (see the README in the main folder for the whole)
 One R script that turns a merged MicroSynteny table into a comparative synteny figure suitable for a poster, paper, or lab meeting.
 
 - `comparative_synteny_plot.R` — defines `plot_synteny()`, which renders a merged table as an arrow-and-ribbon figure
-- `make_my_figure.R` — a short starter script to run line by line
 - `visualization.Rproj` — the RStudio project file; open this to start
 - `species_taxonomy.tsv` — species order and grouping (see `species_taxonomy_SOURCES.md`)
 
@@ -72,15 +71,16 @@ If a species in your table is not listed in the taxonomy table, it is not drawn,
 ### Plotting in RStudio
 
 1. Open `visualization.Rproj` (double-click it). RStudio opens in this folder.
-2. Open `make_my_figure.R` and run it one line at a time.
-
-The lines in that file are all there is to it:
+2. Load the tool: open `comparative_synteny_plot.R` and click **Source**, or type the first line below in the Console. It draws nothing yet, and prints a few example lines to try.
+3. Run a `plot_synteny()` line in the Console.
 
 ```r
 source("comparative_synteny_plot.R")     # load the tool; draws nothing yet
 
 plot_synteny("ImpL2_Sample.tsv")         # every species in the table
 ```
+
+`ImpL2_Sample.tsv` ships with the suite, so these lines work on a fresh download. For your own figure, put your merged table's file name in the quotes, for example `plot_synteny("ClpX_merged.tsv")`.
 
 `source()` teaches R one new command, `plot_synteny()`. Each call to it stands alone: plotting a second table needs no clean-up after the first.
 
@@ -91,20 +91,34 @@ A table named without a path is looked for in the suite's `output` folder, which
 ```
 Rscript comparative_synteny_plot.R TSV [TARGET] [LEVEL] [NAME]
 
-Rscript comparative_synteny_plot.R ImpL2_merged.tsv
-Rscript comparative_synteny_plot.R ImpL2_merged.tsv ImpL2 group obscura
+Rscript comparative_synteny_plot.R ImpL2_Sample.tsv
+Rscript comparative_synteny_plot.R ImpL2_Sample.tsv ImpL2 group obscura
 ```
 
 From the suite's main folder, the same commands start with `Rscript visualization/comparative_synteny_plot.R`.
+
+### Plotting in Posit Cloud
+
+1. Make the project: **New Project from Git Repository**, and paste the repository address.
+2. Get your merged table in. In the **Files** pane, click into the `output` folder, click **Upload**, and choose your merged `.tsv` file from your computer. It has to be in `output`.
+3. Install the packages once per project (see "What you'll need").
+4. In the Console, load the tool and plot. The project opens in the suite's main folder, so the path includes `visualization/`:
+
+```r
+source("visualization/comparative_synteny_plot.R")
+plot_synteny("ImpL2_Sample.tsv")
+```
+
+To take figures out, tick them in the `output` folder in the Files pane, then **More**, then **Export**.
 
 ### Plotting one subgenus, group, or subgroup
 
 Add a level and a name:
 
 ```r
-plot_synteny("chico_merged.tsv", level = "subgenus", name = "Sophophora")
-plot_synteny("chico_merged.tsv", level = "group",    name = "repleta")
-plot_synteny("chico_merged.tsv", level = "subgroup", name = "melanogaster")
+plot_synteny("ImpL2_Sample.tsv", level = "subgenus", name = "Sophophora")
+plot_synteny("ImpL2_Sample.tsv", level = "group",    name = "repleta")
+plot_synteny("ImpL2_Sample.tsv", level = "subgroup", name = "melanogaster")
 ```
 
 Valid levels are `full`, `subgenus`, `group`, and `subgroup`. The name must match a value in the corresponding column of `species_taxonomy.tsv` — pass a name it doesn't recognise and it will tell you what the valid options are.
@@ -113,13 +127,31 @@ Valid levels are `full`, `subgenus`, `group`, and `subgroup`. The name must matc
 
 **Adjacency is recomputed within the subset.** Two species that are neighbours in the filtered plot get a ribbon even if unshown species separate them in the full phylogeny. This is deliberate — a subset figure is meant to stand alone — but it does mean a subset ribbon asserts less about phylogenetic distance than a full-phylogeny ribbon does. Every subset figure says so in its subtitle.
 
+### Every figure at once
+
+To draw the full figure, both subgenera and every species group in one go:
+
+```r
+plot_synteny_all("ImpL2_Sample.tsv")
+```
+
+From a terminal:
+
+```
+Rscript comparative_synteny_plot.R ImpL2_Sample.tsv all
+```
+
+It draws the full figure first, then one figure for each subgenus and each group that has at least two species in your table. Subsets with fewer than two species are skipped and listed at the end. Each figure is saved as a PDF, an SVG and a PNG.
+
+To include subgroups as well, in R: `plot_synteny_all("ImpL2_Sample.tsv", levels = c("subgenus", "group", "subgroup"))`.
+
 ### What `plot_synteny()` takes
 
 | Argument | Effect |
 |---|---|
 | `tsv` | The merged table: a file name in quotes |
 | `target` | Target gene name; read from the table if left out |
-| `level` / `name` | Which species to draw; `level` defaults to `"full"` |
+| `level` / `name` | Which species to draw; `level` defaults to `"full"`. `level = "all"` draws every figure, as above |
 | `taxonomy` | A taxonomy table other than the one beside the script |
 | `output_prefix` | An output file name stem other than the default below |
 

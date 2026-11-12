@@ -4,9 +4,7 @@ Tools for recording the genes around a target gene in several *Drosophila*
 species and drawing the result as a comparative synteny figure.
 
 Created by Logan Cohen for the Genomics Education Partnership.
-
 Contact: logancohen@thegep.org
-
 Repository: https://github.com/Lcohen5/MicroSynteny_Suite
 
 ## Getting it
@@ -41,8 +39,19 @@ folder, one cell each:
     %run table_builder/MicroSynteny_Table_Builder.py
     %run merge/merge_microsynteny.py
 
-Step 3 runs in RStudio: open `visualization/visualization.Rproj`, then
-`make_my_figure.R`.
+Step 3 runs in R. In RStudio, open `visualization/visualization.Rproj`, then
+in the Console:
+
+    source("comparative_synteny_plot.R")
+    plot_synteny("ImpL2_Sample.tsv")
+
+`ImpL2_Sample.tsv` ships with the suite. For your own figure, put your merged
+table's file name in the quotes.
+
+To draw the full figure plus every subgenus and species group at once, from a
+terminal in the suite's main folder:
+
+    Rscript visualization/comparative_synteny_plot.R ImpL2_Sample.tsv all
 
 Fuller instructions for the Table Builder and the merge are at the top of each
 file. Instructions for plotting are in `visualization/README.md`.
