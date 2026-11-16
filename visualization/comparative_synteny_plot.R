@@ -1,5 +1,5 @@
 # ══════════════════════════════════════════════════════════════════════════════
-# COMPARATIVE SYNTENY PLOT (v16)
+# COMPARATIVE SYNTENY PLOT (v16.1)
 #
 # Draws one comparative synteny figure (as a PDF, an SVG and a PNG) from a merged
 # MicroSynteny table (schema v7).
@@ -55,6 +55,13 @@
 #   - The PNG always has a white background.
 #   - An SVG is saved alongside the PDF and PNG (needs the svglite package).
 #   The drawing itself is unchanged from v15.
+#
+# What v16.1 changed from v16:
+#   - A target gene that sits inside another gene is now found. The Table
+#     Builder records such a target as a child of its container, and v16
+#     looked for the target only among top-level genes. That species was
+#     then drawn without being turned to face its target, so with the
+#     target on the minus strand its whole row looked inverted.
 #
 # Conventions:
 #   - Genes drawn as pentagon-shaped arrows, pointing in transcription direction
@@ -460,12 +467,17 @@ plot_synteny <- function(tsv, target = NULL, level = "full", name = NULL,
   # This is display-only. The stored `strand`, `slot`, `gene_start` and `gene_end`
   # columns are never modified.
   # ══════════════════════════════════════════════════════════════════════════════
-  # Find the target's raw strand per species (from the row at slot 0 whose
-  # gene_name matches target_gene AND has no parent — i.e. the actual target,
-  # not a same-slot container/nested)
+  # Find the target's raw strand per species: the row at slot 0 whose gene_name
+  # matches target_gene. A top-level row is preferred. Since Table Builder V11
+  # a target that sits inside another gene is recorded as a child of that gene
+  # (it has a parent_uid), so where a species has no top-level target row the
+  # nested one is used.
   target_strand_by_species <- d |>
-    filter(slot == 0, gene_name == TARGET_GENE_CANONICAL,
-           is.na(parent_uid) | parent_uid == "") |>
+    filter(slot == 0, gene_name == TARGET_GENE_CANONICAL) |>
+    mutate(.nested = !(is.na(parent_uid) | parent_uid == "")) |>
+    group_by(species) |>
+    filter(.nested == min(.nested)) |>
+    ungroup() |>
     select(species, target_strand = strand) |>
     distinct()
 

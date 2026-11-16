@@ -52,6 +52,10 @@ The visual grammar:
     - **Dashed, faint** — drift: the gene is absent from every species between the two it connects. Drawn behind everything else.
 - Target-relative orientation is enforced: the target gene is always drawn pointing right in every species, with upstream on the left and downstream on the right, regardless of the target's actual genomic strand. Species that had to be mirrored are marked *(- strand)* above the target.
 
+![A made-up example that shows every part of the visual grammar](visual_grammar_example.png)
+
+*A made-up example, drawn from `output/Visual_Grammar_Sample.tsv`. The genes are invented and named for what they show.*
+
 The two orientation colors are drawn from the Okabe-Ito colorblind-safe palette. Gene colors come from R's Spectral palette, chosen for perceptual band separation.
 
 > **Note on orphan marks.** Earlier versions drew a grey X where a gene was present in one species and absent in its neighbour. That rendering is off by default — the absence of a ribbon already carries the information, and the X marks added visual noise. The classification is still computed if you switch `DRAW_ORPHAN_MARKS` to `TRUE` near the bottom of the plot script.

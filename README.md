@@ -22,7 +22,8 @@ choose **New Project from Git Repository** and paste the repository address.
 | `table_builder/` | Interactive program that builds a table (TSV) of a target gene and its neighbours, one species at a time | Python, in JupyterLab (Anaconda Navigator) |
 | `merge/` | Combines the tables for one target gene into one, and writes a report of what it kept and what to check | Python, in JupyterLab |
 | `visualization/` | Draws the comparative figure from a merged table, as a PDF, an SVG and a PNG | R |
-| `output/` | Where every table and figure is saved. Ships with one finished table, `ImpL2_Sample.tsv`, to try the visualization on | |
+| `output/` | Where every table and figure is saved. Ships with `ImpL2_Sample.tsv`, a finished table to try the visualization on, and `Visual_Grammar_Sample.tsv`, a made-up table that shows every part of the figure | |
+| `web/` | The Table Builder and the visualizer as one web page, `MicroSynteny_Suite.html`. Nothing to install | Any current browser (tested in Chrome) |
 
 ## Order of work
 
@@ -60,6 +61,17 @@ file. Instructions for plotting are in `visualization/README.md`.
 
 Name table files `gene_lastname.tsv`, for example `ImpL2_Smith.tsv`.
 
+## Without installing anything
+
+`web/MicroSynteny_Suite.html` is the Table Builder, the merge and the visualizer
+as one web page. Download the file and open it in a browser (tested in Chrome).
+It works offline and your tables stay on your computer. Its figures are checked
+against `comparative_synteny_plot.R`, and its tables against the Table Builder
+and the merge.
+
+GitHub shows the file as text. Use the download button on the file's page,
+then open the downloaded file.
+
 ## Requirements
 
 - Python 3 (Anaconda is the tested route)
@@ -76,7 +88,9 @@ With thanks to the GEP faculty and students whose feedback made this possible:
 
 ## How this was made
 
-MicroSynteny Suite is actively undergoing development and testing. Please share thoughts, bugs, and ideas with Logan.
+MicroSynteny Suite was a hybrid effort. It was started by hand and refined with
+AI assistance (Claude, from Anthropic). The author is responsible for the code
+and its documentation.
 
 ## License
 

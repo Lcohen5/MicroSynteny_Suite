@@ -1,0 +1,32 @@
+schema_version	target_gene	species	species_number	feature_uid	parent_uid	gene_name	locid	genbank_record	scaffold	slot	strand	gene_start	gene_end	genomic_size	nested_inside	CDS_Nest	UTR_Nest	target_nesting_gene	notes
+v7	Example	D. melanogaster	1	13faa51e4a8844b1b8d50e7b1d5c5e37		Example		Manual	Manual	0	+	40001	45000	5000				n	target | manual: constructed example, not real data
+v7	Example	D. melanogaster	1	d6afa5c2f20c4182ab0808008dd9f331		sameB		Manual	Manual	-1	-	30001	35000	5000				n	manual: constructed example, not real data
+v7	Example	D. melanogaster	1	70c78dba40b241918350f2287ba96191		sameC		Manual	Manual	1	+	50001	55000	5000				n	manual: constructed example, not real data
+v7	Example	D. melanogaster	1	3c38cd438655442cbca6be0f877be0e8		flips		Manual	Manual	-2	+	20001	25000	5000				n	manual: constructed example, not real data
+v7	Example	D. melanogaster	1	ce24e0b1d63f4e6f9f83b59585850829		sameD		Manual	Manual	2	-	60001	65000	5000				n	manual: constructed example, not real data
+v7	Example	D. melanogaster	1	ca779a8c92584723a251474f78812a8f		sameA		Manual	Manual	-3	+	10001	15000	5000				n	manual: constructed example, not real data
+v7	Example	D. melanogaster	1	3ad3087e7b1f48b9a920fc5417e9b47d		shifts		Manual	Manual	3	-	70001	75000	5000				n	manual: constructed example, not real data
+v7	Example	D. melanogaster	1	0fde0517e4c4484ab503a8798cb1540a		drifts		Manual	Manual	-4	+	1	5000	5000				n	manual: constructed example, not real data
+v7	Example	D. melanogaster	1	e08f7590c72b4c86a7dd95ae37557d42		edge		Manual	Manual	4	+	80001	85000	5000				n	manual: constructed example, not real data
+v7	Example	D. melanogaster	1	d9cd4923f1394aeca47d6f4179e042eb	e08f7590c72b4c86a7dd95ae37557d42	nestedA		Manual	Manual	4	-	81001	82000	1000	edge	y	y	n	nested | manual: constructed example, not real data
+v7	Example	D. melanogaster	1	baf8236022cd4048aea426a168ef0ac0	e08f7590c72b4c86a7dd95ae37557d42	nestedB		Manual	Manual	4	+	83001	84000	1000	edge	y	y	n	nested | manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	8fd1940d29504f769109412992fc140e		Example	Manual	Manual	Manual	0	-	40001	45000	5000				n	target | manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	9c39624a5a054fcbb2668e0ee3c1cfc9		sameB	Manual	Manual	Manual	-1	+	50001	55000	5000				n	manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	70c7c12fe42a484898470ed1c51df8a6		sameC	Manual	Manual	Manual	1	-	30001	35000	5000				n	manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	227ea18955664fc8a5ae6fcfd2a06e87		flips	Manual	Manual	Manual	-2	+	60001	65000	5000				n	manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	da54675fe3184dc89fd4fdd77e21c3be		sameD	Manual	Manual	Manual	2	+	20001	25000	5000				n	manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	995056a1b19e4a568bd343444fd12799		sameA	Manual	Manual	Manual	-3	-	70001	75000	5000				n	manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	6fd1d21063814fd4b187a8b4eedd0178		shifts	Manual	Manual	Manual	3	+	10001	15000	5000				n	manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	5aec4cbdb3f54b02b17dc877cb004eaa		other	Manual	Manual	Manual	-4	+	80001	85000	5000				n	manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	92559c9010244704a479c71a6128cc7f		edge	Manual	Manual	Manual	4	-	1	5000	5000				n	manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	13b813a02aa34d1e95c1fc83a73fe224	92559c9010244704a479c71a6128cc7f	nestedA	Manual	Manual	Manual	4	+	3001	4000	1000	edge	y	y	n	nested | manual: constructed example, not real data
+v7	Example	D. pseudoobscura	21	65848ae791094403916158506cab12dc	92559c9010244704a479c71a6128cc7f	nestedB	Manual	Manual	Manual	4	+	1001	2000	1000	edge	y	y	n	nested | manual: constructed example, not real data
+v7	Example	D. virilis	32	01dc3805d3464d50b784ce5d58ad4e9c		Example	Manual	Manual	Manual	0	+	40001	45000	5000				n	target | manual: constructed example, not real data
+v7	Example	D. virilis	32	ee7d0dc8df994a64abbea2caca449494		sameB	Manual	Manual	Manual	-1	-	30001	35000	5000				n	manual: constructed example, not real data
+v7	Example	D. virilis	32	93abcbfb26fb4ca29a6680b2066c1f51		sameC	Manual	Manual	Manual	1	+	50001	55000	5000				n	manual: constructed example, not real data
+v7	Example	D. virilis	32	83384dd3e6044e30ade4e97422c22c91		flips	Manual	Manual	Manual	-2	-	20001	25000	5000				n	manual: constructed example, not real data
+v7	Example	D. virilis	32	e2959babc78d4d1baf00a718ca975fe5		sameD	Manual	Manual	Manual	2	-	60001	65000	5000				n	manual: constructed example, not real data
+v7	Example	D. virilis	32	7e730dc3c6b244649a8e9786455b9d38		sameA	Manual	Manual	Manual	-3	+	10001	15000	5000				n	manual: constructed example, not real data
+v7	Example	D. virilis	32	ee639c7835c144daab3ed1af3e667a30		new	Manual	Manual	Manual	3	+	70001	75000	5000				n	manual: constructed example, not real data
+v7	Example	D. virilis	32	83f0f61bd7784df3b88ba29eae87ae0d		drifts	Manual	Manual	Manual	-4	+	1	5000	5000				n	manual: constructed example, not real data
+v7	Example	D. virilis	32	0afb51df51a6497582279e66cbda6cb7		shifts	Manual	Manual	Manual	4	-	80001	85000	5000				n	manual: constructed example, not real data
