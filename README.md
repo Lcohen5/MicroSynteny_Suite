@@ -76,9 +76,7 @@ With thanks to the GEP faculty and students whose feedback made this possible:
 
 ## How this was made
 
-MicroSynteny Suite was a hybrid effort. It was started by hand and refined with
-AI assistance (Claude, from Anthropic). The author is responsible for the code
-and its documentation.
+MicroSynteny Suite is actively undergoing development and testing. Please share thoughts, bugs, and ideas with Logan.
 
 ## License
 
