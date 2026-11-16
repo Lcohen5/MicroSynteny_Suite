@@ -3,6 +3,10 @@
 Tools for recording the genes around a target gene in several *Drosophila*
 species and drawing the result as a comparative synteny figure.
 
+![A made-up example of a comparative synteny figure](visualization/visual_grammar_example.png)
+
+*A made-up example. The genes are invented and named for what they show. How to read the figure: [visualization/README.md](visualization/README.md).*
+
 Created by Logan Cohen for the Genomics Education Partnership.
 
 Contact: logancohen@thegep.org
@@ -88,9 +92,7 @@ With thanks to the GEP faculty and students whose feedback made this possible:
 
 ## How this was made
 
-MicroSynteny Suite was a hybrid effort. It was started by hand and refined with
-AI assistance (Claude, from Anthropic). The author is responsible for the code
-and its documentation.
+MicroSynteny Suite is actively undergoing development and testing. Please share thoughts, bugs, and ideas with Logan.
 
 ## License
 
